@@ -1,0 +1,41 @@
+@import "reset";
+$primary-color: #000;
+$hover-color: #871805;
+body {
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  #app {
+    max-width: 320px;
+    max-height: 320px;
+    height: 100vh;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    .row {
+      border-bottom: 1px solid $primary-color;
+      display: flex;
+      flex: 1;
+      &:last-child {
+        border-bottom: none;
+      }
+      .box {
+        flex: 1;
+        border-right: 1px solid $primary-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 44px;
+        cursor: pointer;
+        &:last-child {
+          border-right: none;
+        }
+        &:hover {
+          background: $hover-color;
+        }
+      }
+    }
+  }
+}
