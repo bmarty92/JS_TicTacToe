@@ -3,6 +3,7 @@
   const app = document.querySelector('#app');
   const cross = '👺';
   const circle = '💩';
+  let turn = 0;
 
   const create = ({
     tag,
@@ -18,7 +19,8 @@
   };
 
   const addGameData = (row, box) => {
-    gameData[row][box] = cross;
+    gameData[row][box] = turn % 2 === 0 ? cross : circle;
+    turn = turn + 1;
     render();
   };
   const clearApp = () => {
@@ -34,12 +36,13 @@
         classList: 'row'
       });
       rowData.forEach((boxData, boxIndex) => {
+        const hasValue = !!gameData[rowIndex][boxIndex];
         const box = create({
           tag: 'div',
           classList: 'box',
           textContent: boxData,
           events: {
-            click: () => addGameData(rowIndex, boxIndex)
+            click: () => (hasValue ? null : addGameData(rowIndex, boxIndex)),
           },
         });
         row.appendChild(box);
