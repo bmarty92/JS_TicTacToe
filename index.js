@@ -1,10 +1,23 @@
 (function IIFE() {
+  const combos = [
+    //row combinations
+    [[0, 0], [0, 1], [0, 2]],
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    //column combinations
+    [[0, 0], [1, 0], [2, 0]],
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],
+    //diagonale combinations
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]],
+  ];
   const gameData = [...Array(3)].map(item => [...Array(3)]);
   const app = document.querySelector('#app');
   const cross = '👺';
   const circle = '💩';
   let turn = 0;
-
+  let winner = null;
   const create = ({
     tag,
     classList,
@@ -18,15 +31,29 @@
     return element;
   };
 
+  const checkWinner = ()=> {
+    const currentChar = turn % 2 === 0 ? cross : circle;
+    const isWinner = combos.some(combo => combo.every(([row, box])=> gameData[row][box] === currentChar));
+    winner = isWinner ? currentChar : null;
+  };
+
   const addGameData = (row, box) => {
-    gameData[row][box] = turn % 2 === 0 ? cross : circle;
-    turn = turn + 1;
+    const currentChar = turn % 2 === 0 ? cross : circle;
+    gameData[row][box] = currentChar;
+    checkWinner();
+    if (!winner) {
+      turn = turn + 1;
+    } else {
+      console.log('winner');
+    }
     render();
   };
+
   const clearApp = () => {
     const children = [...app.children];
     children.forEach(child => app.removeChild(child));
   }
+
   const render = () => {
     clearApp();
 
@@ -36,13 +63,14 @@
         classList: 'row'
       });
       rowData.forEach((boxData, boxIndex) => {
-        const hasValue = !!gameData[rowIndex][boxIndex];
+        const allowClick = !!gameData[rowIndex][boxIndex] || !!winner;
+        
         const box = create({
           tag: 'div',
           classList: 'box',
           textContent: boxData,
           events: {
-            click: () => (hasValue ? null : addGameData(rowIndex, boxIndex)),
+            click: () => (allowClick || null ? null : addGameData(rowIndex, boxIndex)),
           },
         });
         row.appendChild(box);
